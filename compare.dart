@@ -1,5 +1,5 @@
 void main() {
-  final testCases = [
+  final testCase = [
     "ABC",
     "ABC DEF",
     "ABC  DEF",
@@ -13,30 +13,32 @@ void main() {
     "Ibc def.",
   ];
 
-  const correct = "Abc def.";
-  final normalizedCorrect = normalizeString(correct);
-
-  for (final testCase in testCases) {
-    final normalizedTestCase = normalizeString(testCase);
-    final result = compareStrings(normalizedTestCase, normalizedCorrect);
-    print("${result.replaceAll('1', '').isEmpty}: $result");
+  final correct = "Abc def.";
+  
+  for(int i = 0; i<testCase.length; i++){
+    final textChuanHoa = chuanHoaChuoi(testCase[i]);
+    
+    final result = checkAnswer(textChuanHoa, correct.toLowerCase().trim());
+    print("${result.replaceAll("1","").isEmpty}: "+result);
   }
 }
 
-String normalizeString(String input) {
-  return input.toLowerCase().replaceAll(RegExp(r'\s+'), ' ').trim();
+String chuanHoaChuoi(String a){
+  return a.toLowerCase().replaceAll(RegExp(r'\s+'), ' ').trim();
 }
 
-String compareStrings(String input, String correct) {
-  final minLength = input.length < correct.length ? input.length : correct.length;
+String checkAnswer(String answer, String correct) {
   final buffer = StringBuffer();
+  final length = correct.length;
 
-  for (int i = 0; i < minLength; i++) {
-    buffer.write(input[i] == correct[i] ? "1" : "0");
+  for (int i = 0; i < length; i++) {
+    // Nếu vượt ngoài độ dài test case, coi như sai
+    if (i >= answer.length || answer[i] != correct[i]) {
+      buffer.write("0");
+    } else {
+      buffer.write("1");
+    }
   }
-
-  // Add "0" for remaining characters in the longer string
-  buffer.write("0" * (correct.length - minLength));
 
   return buffer.toString();
 }
